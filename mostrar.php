@@ -58,4 +58,65 @@ $resultado = $conexion->query($sql);
 while($fila = $resultado->fetch_assoc()){
 	echo "Nombre: " . $fila["nombreUsuario"] . "<br>";
 }
+
+echo "<h2>Consulta 6: Lista los usuarios junto con los temas que han elegido y la fecha en que los seleccionaron.</h2>";
+$sql = "SELECT usuarios.nombre AS nombreUsuario, temas.nombre as nombreTema, fecha
+		FROM usuarios
+		INNER JOIN usuarios_temas ON usuarios_temas.idUsuario = usuarios.idUsuario
+		INNER JOIN temas ON temas.idTema = usuarios_temas.idTema
+";
+$resultado = $conexion->query($sql);
+
+while($fila = $resultado->fetch_assoc()){
+	echo "Nombre: " . $fila["nombreUsuario"] . " || " . "Tema: " . $fila["nombreTema"] . " || " . $fila["fecha"]. "<br>";
+}
+
+echo "<h2>Consulta 7: Muestra los nombres de las ciudades que no tienen ningún usuario registrado.</h2>";
+$sql = "SELECT ciudades.nombre AS nombreCiudad
+		FROM ciudades
+		LEFT JOIN usuarios ON usuarios.idCiudad = ciudades.idCiudad
+		where usuarios.idUsuario is NULL
+";
+$resultado = $conexion->query($sql);
+
+while($fila = $resultado->fetch_assoc()){
+	echo "Nombre: " . $fila["nombreCiudad"] . "<br>";
+}
+
+echo "<h2>Consulta 8: Obtén los nombres de los temas que no han sido elegidos por ningún usuario.</h2>";
+$sql = "SELECT temas.nombre AS nombreTema
+		FROM temas
+		LEFT JOIN usuarios_temas ON usuarios_temas.idTema = temas.idTema
+		LEFT JOIN usuarios ON usuarios.idUsuario = usuarios_temas.idUsuario
+		where usuarios.idUsuario is NULL
+";
+$resultado = $conexion->query($sql);
+
+while($fila = $resultado->fetch_assoc()){
+	echo "Nombre: " . $fila["nombreTema"] . "<br>";
+}
+
+echo "<h2>Consulta 9: Muestra los usuarios cuyo correo electrónico pertenece al dominio “gmail.com”.</h2>";
+$sql = "SELECT usuarios.nombre AS nombreUsuario
+		FROM usuarios
+		where email LIKE '%gmail.com'
+";
+$resultado = $conexion->query($sql);
+
+while($fila = $resultado->fetch_assoc()){
+	echo "Nombre: " . $fila["nombreUsuario"] . "<br>";
+}
+
+echo "<h2>Consulta 10: Muestra los nombres de los temas que no han sido elegidos por ningún usuario.</h2>";
+
+$sql = "SELECT temas.nombre AS nombreTema
+        FROM temas
+        LEFT JOIN usuarios_temas ON usuarios_temas.idTema = temas.idTema
+        WHERE usuarios_temas.idUsuario IS NULL;";
+
+$resultado = $conexion->query($sql);
+
+while ($fila = $resultado->fetch_assoc()) {
+    echo "Tema no elegido: " . $fila["nombreTema"] . "<br>";
+}
 ?>
